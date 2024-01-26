@@ -10,5 +10,7 @@
   "showMap": true,
   "sqlitePath": "./gtfs.sqlite",
   "outputFormat": "html",
-  "templatePath": "./views"
+  "templatePath": "./views",
+  "mapkitToken": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlozTUY0OVVNWkQifQ.eyJpc3MiOiJNUTlUTjk3NzJVIiwiaWF0IjoxNzA2MjA4MzY4LCJleHAiOjE3MDg3OTk5NzYsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OSJ9.3ZX6-RyuUoLdi9mcijQ5ViiyyHUFw1Sfs5oBFSm5of4bYkIYAvw6RsHqKy3wUK6iFVNyscZvOUAI4JnKv-i12A",
+  "realtimeUrl": "http://localhost:8000/media"
 }

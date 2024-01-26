@@ -15,3 +15,47 @@ include formatting_functions.pug
 
     script.
         var geojson = !{JSON.stringify(geojson) || '\'\''};
+
+        function mapSetup(map) {
+            var positions = {};
+
+            setInterval(function () {
+                fetch("#{config.realtimeUrl}/gtfs-rt.json").then(function (response) {
+                    return response.json();
+                }).then(function (json) {
+                    json.vehicle_positions.forEach(function (vehicle_position) {
+                        var coordinate = new mapkit.Coordinate(
+                            vehicle_position.position.latitude, vehicle_position.position.longitude
+                        );
+
+                        if (positions[vehicle_position.vehicle.id]) {
+                            positions[vehicle_position.vehicle.id].annotation.coordinate = coordinate;
+                        } else {
+                            var annotation = new mapkit.ImageAnnotation(coordinate, {
+                                url: { 1: "img/bus.png", 2: "img/bus@2x.png", 3: "img/bus@3x.png" },
+                                title: vehicle_position.vehicle.label,
+                                subtitle: vehicle_position.vehicle.license_plate
+                            });
+                            map.addAnnotation(annotation);
+                            positions[vehicle_position.vehicle.id] = {
+                                position_id: vehicle_position.id,
+                                vehicle_id: vehicle_position.vehicle.id,
+                                annotation: annotation
+                            }
+                        }
+                    });
+                    var position_ids = json.vehicle_positions.map(function (position) {
+                        return position.vehicle.id;
+                    });
+                    Object.keys(positions).filter(function (id) {
+                        return !position_ids.includes(id);
+                    }).forEach(function (position) {
+                        var oldPosition = positions[position];
+                        map.removeAnnotation(oldPosition.annotation);
+                        delete positions[position];
+                    });
+                }).catch(function (error) {
+                    console.error(error);
+                });
+            }, 1000);
+        }

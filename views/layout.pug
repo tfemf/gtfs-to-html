@@ -27,7 +27,7 @@ html
 
         script.
             function initMapKit() {
-                var tokenID = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlozTUY0OVVNWkQifQ.eyJpc3MiOiJNUTlUTjk3NzJVIiwiaWF0IjoxNzA2MjkwMTQ1LCJleHAiOjE3Mzc3NjMyMDAsIm9yaWdpbiI6Imh0dHBzOi8vdGZlbWYudWsifQ.efEQyVH2l_sw9XoeZ0iZwVDg-I6V51ydb8zv-vHTRmzMHxP25I62qU2ZYkTmId1Pc6l6P6MwptyfQ3hkGSPHyg";
+                var tokenID = "#{config.mapkitToken}";
 
                 mapkit.init({
                     authorizationCallback: function (done) {
@@ -57,14 +57,22 @@ html
                         region: new mapkit.CoordinateRegion(
                             new mapkit.Coordinate(52.03715, -2.40619),
                             new mapkit.CoordinateSpan(.03, .03)
-                    )
+                        )
                     });
+
+                    if (typeof mapSetup !== "undefined") {
+                        mapSetup(map);
+                    }
 
                     mapkit.importGeoJSON(geojson, {
                         itemForFeature: function (item, geoJSON) {
                             if (geoJSON.geometry.type === "Point") {
                                 item.title = geoJSON.properties.stop_name;
                                 item.subtitle = geoJSON.properties.stop_code;
+                                item.subtitleVisibility = mapkit.FeatureVisibility.Visible;
+                                item.color = "#f0c900";
+                                item.glyphColor = "#008754";
+                                item.glyphImage = { 1: "img/haltestelle.png", 2: "img/haltestelle@2x.png", 3: "img/haltestelle@3x.png" };
                                 map.addAnnotation(item);
                             } else if (geoJSON.geometry.type === "LineString") {
                                 item.style = new mapkit.Style({
