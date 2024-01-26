@@ -1,0 +1,122 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #3c3c3c;
+    font-family: sans-serif;
+    color: #c8c8c8;
+    margin: 0;
+    padding: 0;
+}
+
+#map-container {
+    margin-top: 20px;
+    height: 500px;
+}
+
+.main-container {
+    background-color: #151735;
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.banner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.banner img {
+    width: 40px;
+}
+
+.banner h1 {
+    font-weight: normal;
+    color: #fff;
+}
+
+.timetable-pages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-rows: 1fr;
+    grid-gap: 20px;
+}
+
+.timetable-page {
+    background-color: #c8c8c8;
+    border-radius: 5px;
+    padding: 10px;
+    display: block;
+    text-decoration: none;
+    color: #151735;
+}
+
+.timetable-page .timetable-label {
+    font-weight: bold;
+    color: #151735;
+    display: block;
+    font-size: 1.4em;
+}
+
+.route {
+    border-radius: 10px;
+    padding: 7px;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+.timetable-page .timetable-days {
+    margin-left: 5px;
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+.timetable-container {
+    background: #c8c8c8;
+    color: #151735;
+    border-radius: 5px;
+    padding: 10px 0;
+    margin-top: 20px;
+}
+
+.timetable-container h2 {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.timetable-container .route {
+    margin: 0 10px 0 0;
+}
+
+.timetable-container .table {
+    margin: 10px;
+    border-collapse: collapse;
+    border: 2px solid #000;
+}
+
+.timetable-container .table thead th {
+    background-color: #151735;
+    color: #c8c8c8;
+    padding: 10px;
+}
+
+.timetable-container .table tbody th, .timetable-container .table tbody tr {
+    text-align: left;
+    padding: 10px;
+}
+
+.timetable-container .table tbody th .stop-code {
+    font-weight: normal;
+}
+
+@media (max-width: 950px) {
+    .timetable-container {
+        margin-left: -20px;
+        margin-right: -20px;
+        margin-bottom: -20px;
+    }
+}

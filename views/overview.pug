@@ -1,0 +1,18 @@
+include formatting_functions.pug
+
+.agencies
+    each timetablePageGroup in getAgencyTimetableGroups(timetablePages, agencies)
+        h2= `${formatAgencyName(timetablePageGroup.agency)} Routes`
+        .timetable-pages
+            each timetablePage in timetablePageGroup.timetablePages
+                a.timetable-page(href=`${timetablePage.relativePath}`)
+                    span.timetable-label= timetablePage.timetable_page_label
+                    each route in _.uniqBy(_.flatMap(timetablePage.consolidatedTimetables, timetable => timetable.routes), 'route_id')
+                        span.route(style=`background-color: #${route.route_color}; color: #${route.route_text_color};`)= route.route_short_name
+                    span.timetable-days= timetablePage.dayList
+
+    if config.showMap
+        #map-container
+
+        script.
+            var geojson = !{JSON.stringify(geojson) || '\'\''};

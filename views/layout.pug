@@ -1,0 +1,76 @@
+doctype html
+html
+    head
+        title EMFTA
+        meta(charset="utf-8")
+        meta(name="viewport" content="initial-scale=1.0, width=device-width")
+        link(rel="stylesheet" href=`${config.assetPath}css/style.css`)
+
+        script(src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.core.js" crossorigin async data-callback="initMapKit")
+        block extraHeader
+
+    body
+        .main-container
+            .banner
+                img(src=`${config.assetPath}img/logo.svg` alt="EMF Logo")
+                h1 EMFTA - Electromagnetic Field Transit Authority
+
+            block content
+
+        script.
+            function initMapKit() {
+                var tokenID = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlozTUY0OVVNWkQifQ.eyJpc3MiOiJNUTlUTjk3NzJVIiwiaWF0IjoxNzA2MjA4MzY4LCJleHAiOjE3MDg3OTk5NzYsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OSJ9.3ZX6-RyuUoLdi9mcijQ5ViiyyHUFw1Sfs5oBFSm5of4bYkIYAvw6RsHqKy3wUK6iFVNyscZvOUAI4JnKv-i12A";
+
+                mapkit.init({
+                    authorizationCallback: function (done) {
+                        done(tokenID);
+                    },
+                    language: "en",
+                    libraries: ["services", "full-map", "geojson", "user-location", "overlays", "annotations"]
+                });
+
+                mapkit.addEventListener("configuration-change", function (event) {
+                    switch (event.status) {
+                        case "Initialized":
+                            renderMap();
+                            break;
+                    }
+                });
+            }
+
+            function renderMap() {
+                if (typeof geojson !== "undefined") {
+                    var map = new mapkit.Map("map-container", {
+                        tintColor: "#151735",
+                        colorScheme: mapkit.Map.ColorSchemes.Dark,
+                        mapType: mapkit.Map.MapTypes.Standard,
+                        showsMapTypeControl: true,
+                        showsUserLocationControl: true,
+                        region: new mapkit.CoordinateRegion(
+                            new mapkit.Coordinate(52.03715, -2.40619),
+                            new mapkit.CoordinateSpan(.03, .03)
+                    )
+                    });
+
+                    mapkit.importGeoJSON(geojson, {
+                        itemForFeature: function (item, geoJSON) {
+                            if (geoJSON.geometry.type === "Point") {
+                                item.title = geoJSON.properties.stop_name;
+                                item.subtitle = geoJSON.properties.stop_code;
+                                map.addAnnotation(item);
+                            } else if (geoJSON.geometry.type === "LineString") {
+                                item.style = new mapkit.Style({
+                                    lineWidth: 5,
+                                    lineCap: "round",
+                                    lineJoin: "round",
+                                    strokeColor: geoJSON.properties.route_color,
+                                });
+                                map.addOverlay(item);
+                            } else {
+                                console.log(item, geoJSON);
+                            }
+                        },
+                        geoJSONDidComplete: function () {}
+                    });
+                }
+            }

@@ -1,0 +1,14 @@
+{
+  "agencies": [
+    {
+      "agency_key": "emf",
+      "url": "http://44.31.105.108:8000/media/gtfs.zip"
+    }
+  ],
+  "allowEmptyTimetables": true,
+  "linkStopUrls": true,
+  "showMap": true,
+  "sqlitePath": "/data/gtfs.sqlite",
+  "outputFormat": "html",
+  "templatePath": "/views"
+}
