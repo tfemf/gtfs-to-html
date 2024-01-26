@@ -1,5 +1,9 @@
 include formatting_functions.pug
 
+.service-alerts
+    h2 Service Alerts
+    #service-alerts
+
 .agencies
     each timetablePageGroup in getAgencyTimetableGroups(timetablePages, agencies)
         h2= `${formatAgencyName(timetablePageGroup.agency)} Routes`
@@ -15,47 +19,215 @@ include formatting_functions.pug
 
     script.
         var geojson = !{JSON.stringify(geojson) || '\'\''};
+        var service_alerts_dom = document.getElementById('service-alerts');
+
+        var alert_state = {};
+        var position_state = {};
+
+        function processAlerts(alerts) {
+            var active_alerts = alerts.filter(function (alert) {
+                return alert.active_period.some(function (active_period) {
+                    if (!active_period.start && !active_period.end) {
+                        return true;
+                    } else if (!active_period.start) {
+                        return new Date(active_period.end) >= new Date();
+                    } else if (!active_period.end) {
+                        return new Date(active_period.start) <= new Date();
+                    } else {
+                        return (new Date(active_period.start) <= new Date()) && (new Date(active_period.end) >= new Date());
+                    }
+                });
+            });
+
+            active_alerts.forEach(function (alert) {
+                if (alert_state[alert.id]) {
+                    var alert_dom = alert_state[alert.id].dom;
+                    alert_dom.title.innerText = alert.header_text;
+                    alert_dom.desc.innerText = alert.description_text;
+
+                    if (alert.cause) {
+                        if (alert_dom.cause) {
+                            alert_dom.cause.innerText = `Cause: ${alert.cause}`
+                        } else {
+                            alert_dom.cause = document.createElement("span");
+                            alert_dom.cause.className = "cause";
+                            alert_dom.cause.innerText = `Cause: ${alert.cause}`
+                            alert_dom.alert.appendChild(alert_dom.cause);
+                        }
+                    } else {
+                        alert_dom.cause.remove();
+                    }
+
+                    if (alert.severity) {
+                        if (alert_dom.severity) {
+                            alert_dom.severity.innerText = `Severity: ${alert.severity}`
+                        } else {
+                            alert_dom.severity = document.createElement("span");
+                            alert_dom.severity.className = "severity";
+                            alert_dom.severity.innerText = `Cause: ${alert.severity}`
+                            alert_dom.alert.appendChild(alert_dom.severity);
+                        }
+                    } else {
+                        alert_dom.severity.remove();
+                    }
+
+                    if (alert.effect) {
+                        if (alert_dom.effect) {
+                            alert_dom.effect.innerText = `Effect: ${alert.effect}`
+                        } else {
+                            alert_dom.effect = document.createElement("span");
+                            alert_dom.effect.className = "effect";
+                            alert_dom.effect.innerText = `Effect: ${alert.effect}`
+                            alert_dom.alert.appendChild(alert_dom.effect);
+                        }
+                    } else {
+                        alert_dom.effect.remove();
+                    }
+
+                    if (alert.url) {
+                        if (alert_dom.url) {
+                            alert_dom.url.href = alert.url;
+                        } else {
+                            alert_dom.url = document.createElement("a");
+                            alert_dom.url.href = alert.url;
+                            alert_dom.url.innerText = "More information";
+                            alert_dom.alert.appendChild(alert_dom.url);
+                        }
+                    } else {
+                        alert_dom.url.remove();
+                    }
+                } else {
+                    var alert_dom;
+                    var alert_title;
+                    var alert_cause;
+                    var alert_severity;
+                    var alert_effect;
+                    var alert_url;
+                    var alert_desc;
+
+                    alert_dom = document.createElement("div");
+                    alert_dom.className = "alert";
+
+                    alert_title = document.createElement("h3");
+                    alert_title.innerText = alert.header_text;
+                    alert_dom.appendChild(alert_title);
+
+                    if (alert.cause) {
+                        alert_cause = document.createElement("span");
+                        alert_cause.className = "cause";
+                        alert_cause.innerText = `Cause: ${alert.cause}`
+                        alert_dom.appendChild(alert_cause);
+                    }
+
+                    if (alert.severity) {
+                        alert_severity = document.createElement("span");
+                        alert_severity.className = "severity";
+                        alert_severity.innerText = `Severity: ${alert.severity}`
+                        alert_dom.appendChild(alert_severity);
+                    }
+
+                    if (alert.effect) {
+                        alert_effect = document.createElement("span");
+                        alert_effect.className = "effect";
+                        alert_effect.innerText = `Effect: ${alert.effect}`
+                        alert_dom.appendChild(alert_effect);
+                    }
+
+                    alert_desc = document.createElement("p");
+                    alert_desc.innerText = alert.description_text;
+                    alert_dom.appendChild(alert_desc);
+
+                    if (alert.url) {
+                        alert_url = document.createElement("a");
+                        alert_url.href = alert.url;
+                        alert_url.innerText = "More information";
+                        alert_dom.appendChild(alert_url);
+                    }
+
+                    service_alerts_dom.append(alert_dom);
+                    alert_state[alert.id] = {
+                        id: alert.id,
+                        dom: {
+                            alert: alert_dom,
+                            title: alert_title,
+                            cause: alert_cause,
+                            severity: alert_severity,
+                            effect: alert_effect,
+                            url: alert_url,
+                            desc: alert_desc
+                        }
+                    }
+                }
+            });
+
+            if (active_alerts.length) {
+                service_alerts_dom.parentElement.style.display = "grid";
+            } else {
+                service_alerts_dom.parentElement.style.display = "none";
+            }
+
+            var alert_ids = active_alerts.map(function (position) {
+                return position.id;
+            });
+            Object.keys(alert_state).filter(function (id) {
+                return !alert_ids.includes(id);
+            }).forEach(function (position) {
+                var oldAlert = alert_state[position];
+                oldAlert.dom.alert.remove();
+                delete alert_state[position];
+            });
+        }
+
+        function processPositions(positions) {
+            positions.forEach(function (vehicle_position) {
+                var coordinate = new mapkit.Coordinate(
+                    vehicle_position.position.latitude, vehicle_position.position.longitude
+                );
+
+                if (position_state[vehicle_position.vehicle.id]) {
+                    position_state[vehicle_position.vehicle.id].annotation.coordinate = coordinate;
+                    position_state[vehicle_position.vehicle.id].annotation.title = vehicle_position.vehicle.label;
+                    position_state[vehicle_position.vehicle.id].annotation.subtitle = vehicle_position.vehicle.license_plate;
+                } else {
+                    var annotation = new mapkit.ImageAnnotation(coordinate, {
+                        url: {1: "img/bus.png", 2: "img/bus@2x.png", 3: "img/bus@3x.png"},
+                        title: vehicle_position.vehicle.label,
+                        subtitle: vehicle_position.vehicle.license_plate
+                    });
+                    map.addAnnotation(annotation);
+                    position_state[vehicle_position.vehicle.id] = {
+                        position_id: vehicle_position.id,
+                        vehicle_id: vehicle_position.vehicle.id,
+                        annotation: annotation
+                    }
+                }
+            });
+            var position_ids = positions.map(function (position) {
+                return position.vehicle.id;
+            });
+            Object.keys(position_state).filter(function (id) {
+                return !position_ids.includes(id);
+            }).forEach(function (position) {
+                var oldPosition = position_state[position];
+                map.removeAnnotation(oldPosition.annotation);
+                delete position_state[position];
+            });
+        }
+
+        function update(map) {
+            fetch("#{config.realtimeUrl}/gtfs-rt.json").then(function (response) {
+                return response.json();
+            }).then(function (json) {
+                processAlerts(json.alerts);
+                processPositions(json.vehicle_positions);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        }
 
         function mapSetup(map) {
-            var positions = {};
-
+            update(map);
             setInterval(function () {
-                fetch("#{config.realtimeUrl}/gtfs-rt.json").then(function (response) {
-                    return response.json();
-                }).then(function (json) {
-                    json.vehicle_positions.forEach(function (vehicle_position) {
-                        var coordinate = new mapkit.Coordinate(
-                            vehicle_position.position.latitude, vehicle_position.position.longitude
-                        );
-
-                        if (positions[vehicle_position.vehicle.id]) {
-                            positions[vehicle_position.vehicle.id].annotation.coordinate = coordinate;
-                        } else {
-                            var annotation = new mapkit.ImageAnnotation(coordinate, {
-                                url: { 1: "img/bus.png", 2: "img/bus@2x.png", 3: "img/bus@3x.png" },
-                                title: vehicle_position.vehicle.label,
-                                subtitle: vehicle_position.vehicle.license_plate
-                            });
-                            map.addAnnotation(annotation);
-                            positions[vehicle_position.vehicle.id] = {
-                                position_id: vehicle_position.id,
-                                vehicle_id: vehicle_position.vehicle.id,
-                                annotation: annotation
-                            }
-                        }
-                    });
-                    var position_ids = json.vehicle_positions.map(function (position) {
-                        return position.vehicle.id;
-                    });
-                    Object.keys(positions).filter(function (id) {
-                        return !position_ids.includes(id);
-                    }).forEach(function (position) {
-                        var oldPosition = positions[position];
-                        map.removeAnnotation(oldPosition.annotation);
-                        delete positions[position];
-                    });
-                }).catch(function (error) {
-                    console.error(error);
-                });
+                update(map);
             }, 1000);
         }

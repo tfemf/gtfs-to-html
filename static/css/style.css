@@ -160,3 +160,40 @@ body {
     margin-right: 10px;
     align-self: end;
 }
+
+.service-alerts {
+    display: none;
+}
+
+#service-alerts {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-rows: 1fr;
+    grid-gap: 20px;
+}
+
+.alert {
+    background-color: #c8c8c8;
+    color: #151735;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.alert h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.alert .cause, .alert .effect, .alert .severity {
+    margin-bottom: 5px;
+    display: block;
+    font-size: 1.2em;
+}
+
+.alert p {
+    font-size: 1.1em;
+}
+
+.alert a {
+    color: #089491;
+}
