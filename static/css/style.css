@@ -2,6 +2,20 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: 'Cymru Sans Transport';
+    src: url('../fonts/CymruSansTransport-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cymru Sans Transport';
+    src: url('../fonts/CymruSansTransport-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
 body {
     background-color: #3c3c3c;
     font-family: sans-serif;
@@ -26,16 +40,24 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 .banner img {
-    width: 40px;
+    width: 75px;
 }
 
 .banner h1 {
+    letter-spacing: 0.6px;
+    font-size: 2.5em;
+    margin: 0;
     font-weight: normal;
     color: #fff;
+    font-family: "Cymru Sans Transport", sans-serif;
+}
+
+.banner h1 .welsh {
+    font-weight: 500;
 }
 
 .timetable-pages {
@@ -77,7 +99,8 @@ body {
 .timetable-container {
     background: #c8c8c8;
     color: #151735;
-    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     padding: 10px 0;
     margin-top: 20px;
 }
@@ -119,4 +142,21 @@ body {
         margin-right: -20px;
         margin-bottom: -20px;
     }
+}
+
+.footer {
+    background: #c8c8c8;
+    color: #151735;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.footer img {
+    max-width: 100%;
+    width: 250px;
+    margin-right: 10px;
+    align-self: end;
 }

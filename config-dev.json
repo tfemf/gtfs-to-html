@@ -2,13 +2,13 @@
   "agencies": [
     {
       "agency_key": "emf",
-      "url": "https://tracking.tfemf.uk/media/gtfs.zip"
+      "url": "http://localhost:8000/media/gtfs.zip"
     }
   ],
   "allowEmptyTimetables": true,
   "linkStopUrls": true,
   "showMap": true,
-  "sqlitePath": "/data/gtfs.sqlite",
+  "sqlitePath": "./gtfs.sqlite",
   "outputFormat": "html",
-  "templatePath": "/views"
+  "templatePath": "./views"
 }

@@ -11,8 +11,7 @@ include formatting_functions.pug
                         span.route(style=`background-color: #${route.route_color}; color: #${route.route_text_color};`)= route.route_short_name
                     span.timetable-days= timetablePage.dayList
 
-    if config.showMap
-        #map-container
+    #map-container.overview-map
 
-        script.
-            var geojson = !{JSON.stringify(geojson) || '\'\''};
+    script.
+        var geojson = !{JSON.stringify(geojson) || '\'\''};

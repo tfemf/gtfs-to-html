@@ -1,7 +1,7 @@
 doctype html
 html
     head
-        title EMFTA
+        title TfEMF
         meta(charset="utf-8")
         meta(name="viewport" content="initial-scale=1.0, width=device-width")
         link(rel="stylesheet" href=`${config.assetPath}css/style.css`)
@@ -12,14 +12,22 @@ html
     body
         .main-container
             .banner
-                img(src=`${config.assetPath}img/logo.svg` alt="EMF Logo")
-                h1 EMFTA - Electromagnetic Field Transit Authority
+                img(src=`${config.assetPath}img/logo2.svg` alt="TfEMF Logo")
+                h1
+                    span.welsh Trafnidiaeth EMF
+                    br
+                    | Transport for EMF
 
             block content
 
+            .footer
+                p.generated Generated at #{new Date().toLocaleTimeString()} on #{new Date().toLocaleDateString('en-gb', {year: "numeric", month: "short", day: "numeric"})}.
+
+                img(src=`${config.assetPath}img/evv.png` alt="EVV Logo")
+
         script.
             function initMapKit() {
-                var tokenID = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlozTUY0OVVNWkQifQ.eyJpc3MiOiJNUTlUTjk3NzJVIiwiaWF0IjoxNzA2MjA4MzY4LCJleHAiOjE3MDg3OTk5NzYsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OSJ9.3ZX6-RyuUoLdi9mcijQ5ViiyyHUFw1Sfs5oBFSm5of4bYkIYAvw6RsHqKy3wUK6iFVNyscZvOUAI4JnKv-i12A";
+                var tokenID = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlozTUY0OVVNWkQifQ.eyJpc3MiOiJNUTlUTjk3NzJVIiwiaWF0IjoxNzA2MjkwMTQ1LCJleHAiOjE3Mzc3NjMyMDAsIm9yaWdpbiI6Imh0dHBzOi8vdGZlbWYudWsifQ.efEQyVH2l_sw9XoeZ0iZwVDg-I6V51ydb8zv-vHTRmzMHxP25I62qU2ZYkTmId1Pc6l6P6MwptyfQ3hkGSPHyg";
 
                 mapkit.init({
                     authorizationCallback: function (done) {
