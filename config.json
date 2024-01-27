@@ -11,6 +11,6 @@
   "sqlitePath": "/data/gtfs.sqlite",
   "outputFormat": "html",
   "templatePath": "/views",
-  "mapkitToken": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlozTUY0OVVNWkQifQ.eyJpc3MiOiJNUTlUTjk3NzJVIiwiaWF0IjoxNzA2MjkwMTQ1LCJleHAiOjE3Mzc3NjMyMDAsIm9yaWdpbiI6Imh0dHBzOi8vdGZlbWYudWsifQ.efEQyVH2l_sw9XoeZ0iZwVDg-I6V51ydb8zv-vHTRmzMHxP25I62qU2ZYkTmId1Pc6l6P6MwptyfQ3hkGSPHyg",
+  "mapkitToken": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlozTUY0OVVNWkQifQ.eyJpc3MiOiJNUTlUTjk3NzJVIiwiaWF0IjoxNzA2MjkwMTQ1LCJleHAiOjE3Mzc3NjMyMDAsIm9yaWdpbiI6Imh0dHBzOi8vYnVzLmVtZi5jYW1wIn0.BLWGCksXZ0zIV2TAXUJym6W7d2PAgAyJRK_7z75RT8kjjqxdS0MaGPlfTjM141SWwx9x6MEZRQZHbbw-bquRhQ",
   "realtimeUrl": "https://tracking.tfemf.uk/media"
 }
